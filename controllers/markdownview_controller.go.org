@@ -39,11 +39,6 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	"github.com/operator-framework/operator-lib/handler"
-	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
-	"k8s.io/apimachinery/pkg/runtime/schema"
-	"sigs.k8s.io/controller-runtime/pkg/source"
-
 	viewv1 "github.com/zoetrope/markdown-view/api/v1"
 )
 
@@ -121,13 +116,9 @@ func (r *MarkdownViewReconciler) Reconcile(ctx context.Context, req ctrl.Request
 func (r *MarkdownViewReconciler) reconcileConfigMap(ctx context.Context, mdView viewv1.MarkdownView) error {
 	logger := log.FromContext(ctx)
 
-	logger.Info("ConfigMap1111")
-
-        	
 	cm := &corev1.ConfigMap{}
 	cm.SetNamespace(mdView.Namespace)
 	cm.SetName("markdowns-" + mdView.Name)
-	logger.Info(mdView.Namespace)
 
 	op, err := ctrl.CreateOrUpdate(ctx, r.Client, cm, func() error {
 		if cm.Data == nil {
@@ -138,27 +129,7 @@ func (r *MarkdownViewReconciler) reconcileConfigMap(ctx context.Context, mdView 
 		}
 		return ctrl.SetControllerReference(&mdView, cm, r.Scheme)
 	})
-	/*
-	var podOwner *corev1.Pod
 
-	cm := &corev1.ConfigMap{}
-	//cm.SetNamespace(mdView.Namespace)
-	cm.SetNamespace("test")
-	cm.SetName("markdowns-" + mdView.Name)
-	podOwner = &corev1.Pod{
-		ObjectMeta: metav1.ObjectMeta{
-			Namespace: "default",
-			Name:      "markdownview-sample",
-		},
-	}
-
-	op, err := ctrl.CreateOrUpdate(ctx, r.Client, cm, func() error {
-		podOwner.SetGroupVersionKind(schema.GroupVersionKind{Group: "", Kind: "MarkdownView"})
-	        logger.Info("ConfigMap2222")
-
-		return handler.SetOwnerAnnotations(podOwner, cm)
-	})
-	*/
 	if err != nil {
 		logger.Error(err, "unable to create or update ConfigMap")
 		return err
@@ -174,8 +145,6 @@ func (r *MarkdownViewReconciler) reconcileConfigMap(ctx context.Context, mdView 
 //! [reconcile-deployment]
 func (r *MarkdownViewReconciler) reconcileDeployment(ctx context.Context, mdView viewv1.MarkdownView) error {
 	logger := log.FromContext(ctx)
-
-	logger.Info("Deployment1111")
 
 	depName := "viewer-" + mdView.Name
 	viewerImage := "peaceiris/mdbook:latest"
@@ -454,10 +423,6 @@ func (r *MarkdownViewReconciler) SetupWithManager(mgr ctrl.Manager) error {
 		Owns(&corev1.ConfigMap{}).
 		Owns(&appsv1.Deployment{}).
 		Owns(&corev1.Service{}).
-		Watches(
-	        		&source.Kind{Type: &viewv1.MarkdownView{}},
-	        		&handler.EnqueueRequestForAnnotation{schema.GroupKind{Group: "", Kind: "ConfigMap"}},
-		).
 		Complete(r)
 }
 
