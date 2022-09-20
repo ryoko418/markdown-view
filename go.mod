@@ -1,4 +1,4 @@
-module github/ryoko418/markdown-view
+module github.com/ryoko418/markdown-view
 
 go 1.18
 
@@ -8,7 +8,6 @@ require (
 	github.com/operator-framework/operator-lib v0.11.0
 	github.com/prometheus/client_golang v1.13.0
 	github.com/prometheus/client_model v0.2.0
-	github.com/ryoko418/markdown-view v0.0.0-20220920042117-f37b4ef5fdb0
 	k8s.io/api v0.25.1
 	k8s.io/apimachinery v0.25.1
 	k8s.io/client-go v0.25.1
