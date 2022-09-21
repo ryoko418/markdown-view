@@ -39,13 +39,12 @@ import (
 	"sigs.k8s.io/controller-runtime/pkg/controller/controllerutil"
 	"sigs.k8s.io/controller-runtime/pkg/log"
 
-	//"github.com/operator-framework/operator-lib/handler"
+	"github.com/ryoko418/operator-lib/handler"
 	//metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime/schema"
 	"sigs.k8s.io/controller-runtime/pkg/source"
 
-	handler "github.com/ryoko418/markdown-view/controlles/handler"
-	viewv1  "github.com/ryoko418/markdown-view/api/v1"
+	viewv1 "github.com/ryoko418/markdown-view/api/v1"
 )
 
 //! [import]
